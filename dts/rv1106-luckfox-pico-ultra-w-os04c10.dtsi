@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: GPL-2.0
+
+/ {
+	vcc_cam_avdd: vcc-cam-avdd {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_cam_avdd";
+		regulator-min-microvolt = <2800000>;
+		regulator-max-microvolt = <2800000>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+	vcc_cam_dovdd: vcc-cam-dovdd {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_cam_dovdd";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+	vcc_cam_dvdd: vcc-cam-dvdd {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_cam_dvdd";
+		regulator-min-microvolt = <1200000>;
+		regulator-max-microvolt = <1200000>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+};
+
+&sc3336 {
+	status = "disabled";
+};
+
+&mis5001 {
+	status = "disabled";
+};
+
+&csi_dphy_input0 {
+	remote-endpoint = <&os04c10_out>;
+	data-lanes = <1 2>;
+};
+
+&i2c4 {
+	pinctrl-0 = <&i2c4m2_xfer>;
+
+	os04c10: os04c10@36 {
+		compatible = "ovti,os04c10";
+		reg = <0x36>;
+		status = "okay";
+
+		clocks = <&cru MCLK_REF_MIPI0>;
+		clock-names = "xvclk";
+		assigned-clocks = <&cru MCLK_REF_MIPI0>;
+		assigned-clock-rates = <12000000>;
+
+		avdd-supply = <&vcc_cam_avdd>;
+		dovdd-supply = <&vcc_cam_dovdd>;
+		dvdd-supply = <&vcc_cam_dvdd>;
+
+		reset-gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&mipi_refclk_out0>;
+
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "OS04C10";
+		rockchip,camera-module-lens-name = "default";
+
+		port {
+			os04c10_out: endpoint {
+				remote-endpoint = <&csi_dphy_input0>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+};

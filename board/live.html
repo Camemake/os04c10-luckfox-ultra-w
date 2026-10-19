@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>OS04C10 live</title>
+<style>
+  html, body { margin: 0; background: #111; color: #fff; font-family: sans-serif; }
+  img { display: block; width: 100%; height: auto; background: #000; }
+  p { position: fixed; left: 12px; top: 8px; margin: 0; font-size: 16px; text-shadow: 0 1px 4px #000; }
+</style>
+<p id="cap">OS04C10 waiting for a frame</p>
+<img id="v" alt="camera">
+<script>
+const img = document.getElementById("v");
+const cap = document.getElementById("cap");
+img.src = "stream.mjpg?t=" + Date.now();
+cap.textContent = "OS04C10 live 2688x1520";
+setInterval(function () {
+  fetch("fps").then(function (r) { return r.text(); }).then(function (t) {
+    cap.textContent = "OS04C10 live 2688x1520 · " + t.trim() + " fps";
+  }).catch(function () {});
+}, 500);
+</script>

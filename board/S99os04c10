@@ -1,0 +1,13 @@
+#!/bin/sh
+case "$1" in
+start)
+	insmod /userdata/os04c10.ko
+	;;
+stop)
+	rmmod os04c10
+	;;
+*)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+	;;
+esac
